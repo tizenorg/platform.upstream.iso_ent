@@ -1,21 +1,3 @@
-#
-# spec file for package iso_ent
-#
-# Copyright (c) 2012 SUSE LINUX Products GmbH, Nuernberg, Germany.
-#
-# All modifications and additions to the file contributed by third parties
-# remain the property of their copyright owners, unless otherwise agreed
-# upon. The license for this file, and modifications and additions to the
-# file, is the same license as for the pristine package itself (unless the
-# license for the pristine package is not an Open Source License, in which
-# case the license is the MIT License). An "Open Source License" is a
-# license that conforms to the Open Source Definition (Version 1.9)
-# published by the Open Source Initiative.
-
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
-#
-
-
 Name:           iso_ent
 BuildRequires:  sgml-skel
 BuildRequires:  unzip
@@ -23,7 +5,7 @@ BuildArch:      noarch
 Provides:       iso-ent
 Provides:       iso-entities
 %define regcat /usr/bin/sgml-register-catalog
-PreReq:         %{regcat}
+Requires(post):         %{regcat}
 Version:        2000.11.03
 Release:        0
 Summary:        Character Entity Sets for ISO 8879:1986
