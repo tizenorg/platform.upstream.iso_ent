@@ -17,26 +17,27 @@
 
 
 Name:           iso_ent
+BuildRequires:  sgml-skel
+BuildRequires:  unzip
+BuildArch:      noarch
+Provides:       iso-ent
+Provides:       iso-entities
+%define regcat /usr/bin/sgml-register-catalog
+PreReq:         %{regcat}
 Version:        2000.11.03
 Release:        0
-License:        SUSE-Permissive
 Summary:        Character Entity Sets for ISO 8879:1986
+License:        SUSE-Permissive
 Group:          Productivity/Publishing/SGML
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %define ke_pkg ISOEnts.zip
 Source0:        http://www.oasis-open.org/cover/ISOEnts.zip
 Source1:        ISOgrk5.gz
-Patch0:         iso_ent.dif
-BuildRequires:  sgml-skel
-BuildRequires:  unzip
-%define regcat /usr/bin/sgml-register-catalog
-Requires(pre):  %{regcat}
-Provides:       iso-ent
-Provides:       iso-entities
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-BuildArch:      noarch
+Patch:          iso_ent.dif
 
 %description
 Character entity sets for ISO 8879:1986.
+
 
 %define INSTALL install -m755 -s
 %define INSTALL_DIR install -d -m755
@@ -49,24 +50,23 @@ Character entity sets for ISO 8879:1986.
 unzip -aq $RPM_SOURCE_DIR/%{ke_pkg}
 cp -p $RPM_SOURCE_DIR/ISOgrk5.gz .
 gunzip ISOgrk5.gz
-%patch0 -p1
 
 %build
 
 %install
-root=%{buildroot}
+root=$RPM_BUILD_ROOT
 # sgml_dir=${root}%{_datadir}/sgml
 # sgml_dir_config=${root}/var/lib/sgml
-sgml_dir_iso=%{buildroot}%{sgml_dir}/iso-ent
-sgml_dir_ISO=%{buildroot}%{sgml_dir}/ISO_8879:1986/entities
-%{INSTALL_DIR} %{buildroot}%{sgml_config_dir}
-%{INSTALL_DIR} %{buildroot}%{sgml_dir}/iso-ent
-%{INSTALL_DIR} %{buildroot}%{sgml_dir}/{ISO_8879:1986,ISO_9573-15:1993}/entities
-%{INSTALL_DATA} ISO* %{buildroot}%{sgml_dir}/iso-ent
-%{INSTALL_DATA} CATALOG %{buildroot}%{sgml_config_dir}/CATALOG.iso_ent
-pushd %{buildroot}%{sgml_dir}
+sgml_dir_iso=$RPM_BUILD_ROOT%{sgml_dir}/iso-ent
+sgml_dir_ISO=$RPM_BUILD_ROOT%{sgml_dir}/ISO_8879:1986/entities
+%{INSTALL_DIR} $RPM_BUILD_ROOT%{sgml_config_dir}
+%{INSTALL_DIR} $RPM_BUILD_ROOT%{sgml_dir}/iso-ent
+%{INSTALL_DIR} $RPM_BUILD_ROOT%{sgml_dir}/{ISO_8879:1986,ISO_9573-15:1993}/entities
+%{INSTALL_DATA} ISO* $RPM_BUILD_ROOT%{sgml_dir}/iso-ent
+%{INSTALL_DATA} CATALOG $RPM_BUILD_ROOT%{sgml_config_dir}/CATALOG.iso_ent
+pushd $RPM_BUILD_ROOT%{sgml_dir}
 ln -sf ../../../var/lib/sgml/CATALOG.iso_ent CATALOG.iso_ent
-rm -f ISO_8879-1986
+rm -f ISO_8879-1986 
 ln -s ISO_8879:1986 ISO_8879-1986
 popd
 pushd ${sgml_dir_ISO}
@@ -91,11 +91,11 @@ ln -s ../../iso-ent/ISOnum Numeric_and_Special_Graphic
 ln -s ../../iso-ent/ISOpub Publishing
 ln -s ../../iso-ent/ISOtech General_Technical
 popd
-pushd %{buildroot}%{sgml_dir}
+pushd $RPM_BUILD_ROOT%{sgml_dir}
 rm -f ISO_9573-15-1993
 ln -s ISO_9573-15:1993 ISO_9573-15-1993
 popd
-pushd %{buildroot}%{sgml_dir}/ISO_9573-15:1993/entities
+pushd $RPM_BUILD_ROOT%{sgml_dir}/ISO_9573-15:1993/entities
 rm -f * 2>/dev/null
 ln -s ../../iso-ent/ISOgrk5 Extra_Classical_Greek_Letters
 popd
@@ -116,10 +116,13 @@ if [  "$1" = "0" -a -x %{regcat} ]; then
   done
 fi
 
+%clean
+rm -fr $RPM_BUILD_ROOT
+
 %files
 %defattr(-, root, root)
 # %doc README.SuSE
-%config %{_localstatedir}/lib/sgml/CATALOG.iso_ent
+%config /var/lib/sgml/CATALOG.iso_ent
 %{sgml_dir}/CATALOG.iso_ent
 %{sgml_dir}/iso-ent
 %{sgml_dir}/ISO_8879-1986
