@@ -14,8 +14,6 @@ Group:          Productivity/Publishing/SGML
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %define ke_pkg ISOEnts.zip
 Source0:        http://www.oasis-open.org/cover/ISOEnts.zip
-Source1:        ISOgrk5.gz
-Patch:          iso_ent.dif
 
 %description
 Character entity sets for ISO 8879:1986.
@@ -28,10 +26,7 @@ Character entity sets for ISO 8879:1986.
 %define sgml_config_dir /var/lib/sgml
 
 %prep
-%setup -n %{name} -c -T
-unzip -aq $RPM_SOURCE_DIR/%{ke_pkg}
-cp -p $RPM_SOURCE_DIR/ISOgrk5.gz .
-gunzip ISOgrk5.gz
+%setup -q
 
 %build
 
