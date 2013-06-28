@@ -14,6 +14,7 @@ Group:          Productivity/Publishing/SGML
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %define ke_pkg ISOEnts.zip
 Source0:        http://www.oasis-open.org/cover/ISOEnts.zip
+Source1001: 	iso_ent.manifest
 
 %description
 Character entity sets for ISO 8879:1986.
@@ -27,6 +28,7 @@ Character entity sets for ISO 8879:1986.
 
 %prep
 %setup -q
+cp %{SOURCE1001} .
 
 %build
 
@@ -97,6 +99,7 @@ fi
 rm -fr $RPM_BUILD_ROOT
 
 %files
+%manifest %{name}.manifest
 %defattr(-, root, root)
 # %doc README.SuSE
 %config /var/lib/sgml/CATALOG.iso_ent
